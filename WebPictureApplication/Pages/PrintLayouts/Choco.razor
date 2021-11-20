@@ -1,0 +1,178 @@
+﻿@page "/choco"
+
+@using WebPictureApplication.Models;
+@using WebPictureApplication.Pages;
+@using WebPictureApplication.Shared;
+
+<style>
+    .layout {
+        height: 90%;
+        position: sticky;
+        display: block;
+    }
+
+    .PurpleChocoLayout {
+        background-image: url(../PrintLayouts/choco_moc_violet.jpg);
+        color: white;
+    }
+
+    .GreenChocoLayout {
+        background-image: url(../PrintLayouts/choco_moc_green.jpg);
+        color: white;
+    }
+</style>
+
+
+@inject NavigationManager NavigationManager;
+
+@code {
+    [CascadingParameter(Name = "BaseApiUrl")] protected string BaseApiUrl { get; set; }
+
+    List<LongText> Infos = new List<LongText>();
+    List<TextBlock> Blocks = new List<TextBlock>();
+    string up = "";
+
+    int height = 50;
+    int width = 20;
+    string colorClass = "PurpleChocoLayout";
+
+    protected override void OnInitialized()
+    {
+        colorClass = "PurpleChocoLayout";
+
+        PictureText[] infos = JsonGetter.GetChoco(@"wwwroot\Data\ChocoData.json");
+
+        for (int i = 0; i < infos.Length; i++)
+        {
+            Blocks.Add(new TextBlock
+            {
+                Id = i,
+                Text = infos[i].Author,
+                PlaceId = 0,
+                FullText = new string[] { infos[i].Name, infos[i].Author, infos[i].Text},
+                Path = infos[i].Picture,
+                InnerClassInfo = "zero"
+            });
+        }
+    }
+
+    void HandleStatusUpdated(TextBlock updated)
+    {
+        up = updated.Text;
+    }
+
+    bool showModal = false;
+    List<int> infos = new List<int>();
+    string path;
+
+    private void Download(int id)
+    {
+        string path = id.ToString();
+        if (colorClass == "PurpleChocoLayout")
+        {
+            NavigationManager.NavigateTo($"{BaseApiUrl}/download/purplechoco/{path}", true);
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"{BaseApiUrl}/download/greenchoco/{path}", true);
+        }
+    }
+
+    void ColorChange()
+    {
+        if (colorClass == "PurpleChocoLayout")
+        {
+            colorClass = "GreenChocoLayout";
+        }
+        else
+        {
+            colorClass = "PurpleChocoLayout";
+        }
+    }
+
+
+    void ModalShow()
+    {
+        if (Blocks.Any(x => x.PlaceId == 1))
+        {
+
+            Download(Blocks.SingleOrDefault(x => x.PlaceId == 1).Id);
+        }
+        else
+        {
+            showModal = true;
+        }
+    }
+    void ModalCancel() => showModal = false;
+    void ModalOk()
+    {
+        Console.WriteLine("Modal ok");
+        showModal = false;
+    }
+}
+
+<h3>Обертка для шоколадки</h3>
+<DragNDropContainer OnStatusUpdated="HandleStatusUpdated" Blocks="Blocks" AllowCopy="false">
+    <PlaceComponent HeightPercent="5"
+                    WidthPercent="80"
+                    Id="0"
+                    DesignInfoClass="DesignClass.TopCardPicker" />
+    <div class=@($"{colorClass} layout") style="margin-left: auto; margin-right: auto; display: flex; background-size: contain; background-position: center; background-repeat: no-repeat; ">
+        <TableComponent Path="../PrintLayouts/choco_moc_violet.jpg"
+                        TableWidth="33"
+                        TableHeight="80"
+                        TopPosition="7"
+                        LeftPosition="25"
+                        PlaceWidth="100"
+                        PlaceHeight="70"
+                        Horizontal="1"
+                        Vertical="1" 
+                        Opacity ="0"/>
+    </div>
+        <div>
+            <div style="background-color: transparent;
+                            display: inline-flex;
+                            justify-content: center;
+                            height: 5vh;
+                            width: 100%;
+                            align-items: center">
+                <button type="button"
+                        class="btn btn-prime"
+                        style="background-color: rgb(100, 176, 112)"
+                        @onclick="@ModalShow">
+                    Скачать макет
+                </button>
+            </div>
+        </div>
+
+        <div style="position: absolute; top: 50%; right: 0%; background-color: rgb(100, 176, 112); color: white;">
+            <label>
+                <input type="radio" name="color" checked="@(colorClass == "PurpleChocoLayout")" @onchange="@ColorChange" /> Фиолетовый фон
+            </label>
+            <br />
+            <label>
+                <input type="radio" name="color" checked="@(colorClass == "GreenChocoLayout")" @onchange="@ColorChange" /> Зелёный фон
+            </label>
+        </div>
+
+</DragNDropContainer>
+@if (showModal)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+                </div>
+                <div class="modal-body">
+                    Заполните все ячейки
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" @onclick="@ModalCancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<hr />
