@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "7dc5ead4-2ce9-461b-a607-f733ab3e9d8e": {
+      "ProjectGuid": "7dc5ead4-2ce9-461b-a607-f733ab3e9d8e",
+      "DisplayName": "WebAssemblyPictureApplication",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
