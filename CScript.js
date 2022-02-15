@@ -140,7 +140,7 @@ async function makeSweets(layoutPath, nameP, authorP, textP, textK, textColor) {
             Y = Y + textK;
             for (let j = 0; j < nameP[a].length; j++) {
                 ctx.fillText(nameP[a][j], x, Y, boxWidth);
-                Y = Y + nameK;
+                Y = Y + textK;
             };
             ctx.fillText(authorP[a], x, Y, boxWidth);
         };
@@ -157,7 +157,7 @@ async function makeSweets(layoutPath, nameP, authorP, textP, textK, textColor) {
             Y = Y + textK;
             for (let l = 0; l < nameP[b].length; l++) {
                 ctx.fillText(nameP[b][l], x, Y, boxWidth);
-                Y = Y + nameK;
+                Y = Y + textK;
             };
             ctx.fillText(authorP[b], x, Y, boxWidth);
         };
