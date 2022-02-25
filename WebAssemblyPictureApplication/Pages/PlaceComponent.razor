@@ -1,0 +1,54 @@
+﻿@using Models
+
+@code {
+
+    [Parameter]
+    public int HeightPercent { get; set; }
+
+    [Parameter]
+    public int WidthPercent { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public DesignClass DesignInfoClass { get; set; }
+
+    [CascadingParameter] DragNDropContainer Container { get; set; }
+
+    private async Task HandleDrop()
+    {
+        Container.UpdateJobAsync(Id);
+    }
+
+    public List<TextBlock> Blocks = new List<TextBlock>();
+
+    protected override void OnParametersSet()
+    {
+        Blocks.Clear();
+        Blocks.AddRange(Container.Blocks.Where(x => x.PlaceId == Id));
+    }
+}
+
+<style>
+    .CardDestination {
+        background-color: transparent;
+        display: inline-flex;
+        justify-content: center;
+        height: @($"{HeightPercent}vh");
+        width: @($"{WidthPercent}%");
+        align-items: center;
+    }
+</style>
+
+<div class=@($"{DesignInfoClass} align-middle")
+     ondragover="event.preventDefault();"
+     ondragstart="event.dataTransfer.setData('', event.target.id);"
+     @ondrop="HandleDrop">
+
+    @foreach (var block in Blocks)
+    {
+        <DragableTextComponent DragableText="block" />
+    }
+
+</div>

@@ -1,0 +1,64 @@
+﻿@using Models;
+
+<div style="position: relative; display: flex; margin-left: auto; margin-right: auto;">
+    <div style="height: 72vh; position: relative; display: flex; justify-content: center; float: left; margin-left: auto; margin-right: auto ">
+        <img src=@Path style="opacity: @Opacity; height: fit-content;
+             margin-top: auto;
+             margin-bottom: auto;
+             max-width: 100%;
+             max-height: 100%;" />
+        <div style="height: @($"{TableHeight}%"); width: @($"{TableWidth}%"); position: absolute; top: @($"{TopPosition}%"); left: @($"{LeftPosition}%"); display: flex; ">
+            @for (int i = 0; i < Horizontal; i++)
+            {
+                <div style="        width: @($"{PlaceWidth}%");">
+                    @for (int k = 0; k < Vertical; k++)
+                    {
+                        int pId = k + Vertical * i + 1;
+                        <div style="width: @($"{PlaceWidth}%");">
+                            <PlaceComponent HeightPercent="@PlaceHeight"
+                                            WidthPercent="100"
+                                            Id="@pId"
+                                            DesignInfoClass="DesignClass.CardDestination" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Path { get; set; }
+
+    [Parameter]
+    public int TableWidth { get; set; }
+
+    [Parameter]
+    public int TableHeight { get; set; }
+
+    [Parameter]
+    public int TopPosition { get; set; }
+
+    [Parameter]
+    public int LeftPosition { get; set; }
+
+    [Parameter]
+    public int PlaceWidth { get; set; }
+
+    [Parameter]
+    public int PlaceHeight { get; set; }
+
+    [Parameter]
+    public int Horizontal { get; set; }
+
+    [Parameter]
+    public int Vertical { get; set; }
+
+    [Parameter]
+    public int Opacity { get; set; }
+}
+
+
+

@@ -1,0 +1,87 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="" @onclick="CloseSubMenu">Проект "8 марта"</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="CloseSubMenu" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> О проекте
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="OpenSubMenu">
+                <span class="oi oi-plus" aria-hidden="false"></span> Макеты
+            </NavLink>
+            <ul class="sub-menu">
+                <li class="nav-item px-3" style="display:@openclose">
+                    <NavLink class="nav-link" href="sweets">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Конфеты
+                    </NavLink>
+                </li>
+
+                <li class="nav-item px-3" style="display:@openclose">
+                    <NavLink class="nav-link" href="choco">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Шоколадка
+                    </NavLink>
+                </li>
+
+                <li class="nav-item px-3" style="display:@openclose">
+                    <NavLink class="nav-link" href="box">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Коробка
+                    </NavLink>
+                </li>
+
+                <li class="nav-item px-3" style="display:@openclose">
+                    <NavLink class="nav-link" href="stickers">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Наклейки
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3" style="display:@openclose">
+                    <NavLink class="nav-link" href="zipbag">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Подложки
+                    </NavLink>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="instruction" @onclick="CloseSubMenu">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Рекомендации
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="about" @onclick="CloseSubMenu">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> О нас
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    string openclose = "none";
+
+    void OpenSubMenu()
+    {
+        if (openclose == "none")
+            openclose = "block";
+        else
+            openclose = "none";
+    }
+
+    void CloseSubMenu()
+    {
+        openclose = "none";
+    }
+}

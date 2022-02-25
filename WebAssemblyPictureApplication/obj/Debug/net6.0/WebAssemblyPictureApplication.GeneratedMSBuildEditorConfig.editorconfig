@@ -1,0 +1,83 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property._SupportedPlatformList = browser
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = true
+build_property.IncludeAllContentForSelfExtract = 
+build_property.RootNamespace = WebAssemblyPictureApplication
+build_property.RootNamespace = WebAssemblyPictureApplication
+build_property.ProjectDir = C:\Users\Kitar\Downloads\Новая папка\WebAssemblyPictureApplication\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Kitar\Downloads\Новая папка\WebAssemblyPictureApplication
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/About.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWJvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/DragableTextComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRHJhZ2FibGVUZXh0Q29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/DragNDropContainer.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRHJhZ05Ecm9wQ29udGFpbmVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/Instraction.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5zdHJhY3Rpb24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/PlaceComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGxhY2VDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/PrintLayouts/Box.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpbnRMYXlvdXRzXEJveC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/PrintLayouts/Choco.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpbnRMYXlvdXRzXENob2NvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/PrintLayouts/Stickers.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpbnRMYXlvdXRzXFN0aWNrZXJzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/PrintLayouts/Sweets.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpbnRMYXlvdXRzXFN3ZWV0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/PrintLayouts/Zipbag.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpbnRMYXlvdXRzXFppcGJhZy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Pages/TableComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGFibGVDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-88161n0z1x
+
+[C:/Users/Kitar/Downloads/Новая папка/WebAssemblyPictureApplication/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-w3n7hm14di

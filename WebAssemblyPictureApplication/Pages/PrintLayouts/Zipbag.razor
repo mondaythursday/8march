@@ -1,0 +1,267 @@
+﻿@page "/zipbag"
+
+@using WebAssemblyPictureApplication.Models;
+@using WebAssemblyPictureApplication.Pages;
+@using WebAssemblyPictureApplication.PictureMaker;
+
+
+@inject NavigationManager NavigationManager;
+@inject HttpClient Http;
+@inject IJSRuntime JS;
+
+@code {
+    [CascadingParameter(Name = "BaseApiUrl")] protected string BaseApiUrl { get; set; }
+
+    List<LongText> Infos = new List<LongText>();
+    List<TextBlock> Blocks = new List<TextBlock>();
+    string up = "";
+
+    //int height = 26;
+    //int width = 14;
+    string titleClass = "UpLayout";
+    int layWidth = 4;
+    int layHeight = 6;
+
+    //int vertical = 3;
+    //int horizontal = 4;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //LongText[] infos = JsonGetter.GetStickers(@"wwwroot\Data\StickersData.json");
+        titleClass = "UpLayout";
+        layWidth = 4;
+        layHeight = 6;
+
+        LongText[] infos = await Http.GetFromJsonAsync<LongText[]>(@"Data\StickersData.json");
+
+        for (int i = 0; i < infos.Length; i++)
+        {
+            Blocks.Add(new TextBlock
+        {
+            Id = i,
+            Text = infos[i].ShortText,
+            PlaceId = 0,
+            FullText = new string[] { infos[i].Text },
+            InnerClassInfo = "zero"
+        });
+        }
+    }
+
+    void HandleStatusUpdated(TextBlock updated)
+    {
+        up = updated.Text;
+    }
+
+    bool showModal = false;
+    //string path;
+
+    private void Download(int id)
+    {
+        string picturePath = Blocks[id].Path;
+        string layoutPath;
+        string color;
+        layoutPath = "./PrintLayouts/layout.jpg";
+        color = "white";
+        bool up = titleClass == "UpLayout";
+        double width = layWidth + 0.2;
+        double height = layHeight + 0.2;
+
+        string[] nameArr = MakeLineArr(Blocks[id].FullText[0], 22);
+
+        JS.InvokeVoidAsync("Lib.makeBag", layoutPath, up,  
+                            nameArr, 
+                            width, height, color);
+    }
+
+    string[] MakeLineArr (string text, int max)
+    {
+        List<string> lineList = new List<string> { };
+        string[] wordArr = text.Split(' ');
+        int count = 0;
+        string line = "";
+        for (int i=0; i<wordArr.Length; i++)
+        {
+            count += wordArr[i].Length;
+            if (count <= max)
+            {
+                line += wordArr[i];
+                line += " ";
+                count += 1;
+            }
+            else
+            {
+                lineList.Add(line);
+                line = wordArr[i] + " ";
+                count = wordArr[i].Length +1; 
+            }
+        }
+        lineList.Add(line);
+        return lineList.ToArray();
+    }
+
+
+    void ModalShow()
+    {
+        if (Blocks.Any(x => x.PlaceId == 1))
+        {
+
+            Download(Blocks.SingleOrDefault(x => x.PlaceId == 1).Id);
+        }
+        else
+        {
+            showModal = true;
+        }
+    }
+    void ModalCancel() => showModal = false;
+    void ModalOk()
+    {
+        Console.WriteLine("Modal ok");
+        showModal = false;
+    }
+
+    void TitleChange()
+    {
+        if (titleClass == "UpLayout")
+        {
+            titleClass = "DownLayout";
+        }
+        else
+        {
+            titleClass = "UpLayout";
+        }
+    }
+
+    void SizeChange(int x, int y)
+    {
+        layWidth = x;
+        layHeight = y;
+    }
+}
+
+<h3>Подложки для зип-пакетов/Открытки
+    <span style="background-color: white; color: white;">
+        <span class = "indextext">Forum</span>
+        <span class = "didonatext">Didona</span>
+        </span>
+<div class="dropdown">
+  <button class="dropbtn">Как пользоваться конструктором</button>
+  <div class="dropdown-content">
+    <ol>
+        <li>Перетащите зелёный блок непосредственно на макет поближе к центру.</li>
+        <li>На макете блок автоматически развернётся в полный вид.</li>
+        <li>Если вы передумали, перетащите блок обратно наверх.</li>
+        <li>Если вы хотите переместить блок на место другого, просто сделайте это. Старый блок сам вернётся наверх.</li>  
+        <li>Выберите размер макета.</li>
+        <li>Выберите расположение поздравления.</li>
+        <li>Не бойтесь, если что-то выходит за пределы макета - это проблема онлайн-вёрстки. На печатном макете всё будет хорошо.</li>
+        <li>Когда вы заполните макет, нажмите на кнопку "Скачать".</li>
+        <li>Одновременно скачаются обе стороны карточки, возможно, браузер попросит дать разрешение на множественное скачивание.</li>
+        <li>Перейдите на страницу "Рекомендации", чтобы узнать о рекомендуемом формате и других аспектах печати.</li>
+    </ol>
+  </div>
+</div>
+</h3> 
+@if (Blocks.Count == 0)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <DragNDropContainer OnStatusUpdated="HandleStatusUpdated" Blocks="Blocks" AllowCopy="false">
+        <PlaceComponent HeightPercent="5"
+                        WidthPercent="80"
+                        Id="0"
+                        DesignInfoClass="DesignClass.TopCardPicker" />
+        <div class=@($"{titleClass} layout") style="margin-left: auto; margin-right: auto; display: flex; background-size: contain; background-position: center; background-repeat: no-repeat; ">
+            <TableComponent Path="./PrintLayouts/zipbagUp.jpg"
+                            TableWidth="65"
+                            TableHeight="50"
+                            TopPosition="30"
+                            LeftPosition="17"
+                            PlaceWidth="100"
+                            PlaceHeight="50"
+                            Horizontal="1"
+                            Vertical="1"
+                            Opacity="0" />
+        </div>
+        <canvas id='bag_canvas_id' width="0" height="0"></canvas>
+        <div>
+            <div style="background-color: transparent;
+                            display: inline-flex;
+                            justify-content: center;
+                            height: 5vh;
+                            width: 100%;
+                            align-items: center">
+                <button type="button"
+                        class="btn btn-prime"
+                        style="background-color: rgb(100, 176, 112)"
+                        @onclick="@ModalShow">
+                    Скачать макет
+                </button>
+            </div>
+        </div>
+
+        <div style="padding-right:10px; padding-left:10px; position: absolute; top: 50%; right: 0%; background-color: rgb(100, 176, 112); color: white;">
+            <div>
+            <label>
+                <input type="radio" name="color" checked="@(titleClass == "UpLayout")" @onchange="@TitleChange" /> Вверху
+            </label>
+            <br />
+            <label>
+                <input type="radio" name="color" checked="@(titleClass == "DownLayout")" @onchange="@TitleChange" /> Внизу
+            </label>
+            </div>
+            <br>
+            <div>
+            <label>
+                <input type="radio" name="size" checked="@(layWidth == 4)" @onchange="@(() => SizeChange(4,6))" /> 4х6 см
+            </label>
+            <br />
+            <label>
+                <input type="radio" name="size" checked="@(layWidth == 5)" @onchange="@(() => SizeChange(5,7))" /> 5х7 см
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="size" checked="@(layWidth == 6)" @onchange="@(() => SizeChange(6,9))" /> 6х9 см
+            </label>
+            <br />
+            <label>
+                <input type="radio" name="size" checked="@(layWidth == 7)" @onchange="@(() => SizeChange(7,10))" /> 7х10 см
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="size" checked="@(layWidth == 8)" @onchange="@(() => SizeChange(8,12))" /> 8x12 см
+            </label>
+            <br />
+            <label>
+                <input type="radio" name="size" checked="@(layWidth == 9)" @onchange="@(() => SizeChange(9,13))" /> 9x13 см
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="size" checked="@(layWidth == 10)" @onchange="@(() => SizeChange(10,15))" /> 10х15 см
+            </label>
+            <br />
+            <label>
+                <input type="radio" name="size" checked="@(layWidth == 12)" @onchange="@(() => SizeChange(12,18))" /> 12х18 см
+            </label>
+            </div>
+        </div>
+
+    </DragNDropContainer>
+    @if (showModal)
+    {
+        <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        Заполните макет
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" @onclick="@ModalCancel">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+

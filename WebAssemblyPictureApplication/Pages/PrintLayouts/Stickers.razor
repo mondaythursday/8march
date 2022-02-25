@@ -1,0 +1,215 @@
+﻿@page "/stickers"
+
+@using WebAssemblyPictureApplication.Models;
+@using WebAssemblyPictureApplication.Pages;
+@using WebAssemblyPictureApplication.PictureMaker;
+
+
+@inject NavigationManager NavigationManager;
+@inject HttpClient Http;
+@inject IJSRuntime JS;
+
+@code {
+    [CascadingParameter(Name = "BaseApiUrl")] protected string BaseApiUrl { get; set; }
+
+    List<LongText> Infos = new List<LongText>();
+    List<TextBlock> Blocks = new List<TextBlock>();
+    string up = "";
+
+    int height = 26;
+    int width = 14;
+
+    int vertical = 3;
+    int horizontal = 4;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //LongText[] infos = JsonGetter.GetStickers(@"wwwroot\Data\StickersData.json");
+
+        LongText[] infos = await Http.GetFromJsonAsync<LongText[]>(@"Data\StickersData.json");
+
+        for (int i = 0; i < infos.Length; i++)
+        {
+            Blocks.Add(new TextBlock
+        {
+            Id = i,
+            Text = infos[i].ShortText,
+            PlaceId = 0,
+            FullText = new string[] { infos[i].Text },
+            InnerClassInfo = "zero"
+        });
+        }
+    }
+
+    void HandleStatusUpdated(TextBlock updated)
+    {
+        up = updated.Text;
+    }
+
+    bool showModal = false;
+    string path;
+
+    private void Download(int[] ids)
+    {
+        string layoutPath = "./PrintLayouts/stickers.jpg";
+        string color = "white";
+
+        List<string[]> textList = new List<string[]>();
+
+        for (int i = 0; i<ids.Length; i++)
+        {
+            textList.Add(MakeLineArr(Blocks[ids[i]].FullText[0], 26));
+        }
+
+        JS.InvokeVoidAsync("Lib.makeStickers", layoutPath,
+                            textList.ToArray(),
+                            45, color);
+    }
+
+    string[] MakeLineArr (string text, int max)
+    {
+        List<string> lineList = new List<string> { };
+        string[] wordArr = text.Split(' ');
+        int count = 0;
+        string line = "";
+        for (int i=0; i<wordArr.Length; i++)
+        {
+            count += wordArr[i].Length;
+            if (count <= max)
+            {
+                line += wordArr[i];
+                line += " ";
+                count += 1;
+            }
+            else
+            {
+                lineList.Add(line);
+                line = wordArr[i] + " ";
+                count = wordArr[i].Length +1; 
+            }
+        }
+        lineList.Add(line);
+        return lineList.ToArray();
+    }
+
+private bool CheckAllPlaces(int num)
+{
+    for (int i = 1; i <= num; i++)
+    {
+        if (!(Blocks.Any(x => x.PlaceId == i)))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+private int[] MakeIdsArr(int num)
+{
+    List<int> infos = new List<int>();
+    infos = new List<int>();
+    for (int i = 1; i <= num; i++)
+    {
+        infos.Add(Blocks.SingleOrDefault(x => x.PlaceId == i).Id);
+    }
+    return infos.ToArray();
+}
+
+
+void ModalShow()
+{
+    if (CheckAllPlaces(12))
+    {
+
+        Download(MakeIdsArr(12));
+    }
+    else
+    {
+        showModal = true;
+    }
+}
+void ModalCancel() => showModal = false;
+void ModalOk()
+{
+    Console.WriteLine("Modal ok");
+    showModal = false;
+}
+}
+
+<h3>Наклейки
+    <span style="background-color: white; color: white;">
+        <span class = "indextext">Forum</span>
+        <span class = "didonatext">Didona</span>
+        </span>
+<div class="dropdown">
+  <button class="dropbtn">Как пользоваться конструктором</button>
+  <div class="dropdown-content">
+    <ol>
+        <li>Перетащите зелёные блоки с фрагментами текстов непосредственно на макет, поближе к центру нужной наклейки.</li>
+        <li>На макете блок автоматически развернётся в полный вид.</li>
+        <li>Вы можете редактировать готовый набор.</li>
+        <li>Вы можете перетаскивать блоки по макету.</li>
+        <li>Если вы передумали насчёт одного из блоков, перетащите его обратно наверх.</li>
+        <li>Если вы хотите переместить блок на место другого, просто сделайте это. Старый блок сам вернётся наверх.</li>      
+        <li>Не бойтесь, если блоки выходят за пределы макета - это проблема онлайн-вёрстки. На печатном макете всё будет хорошо.</li>
+        <li>Когда вы заполните все 12 ячеек, нажмите на кнопку "Скачать".</li>
+        <li>Перейдите на страницу "Рекомендации", чтобы узнать о рекомендуемом формате и других аспектах печати.</li>
+    </ol>
+  </div>
+</div>
+</h3>
+@if (Blocks.Count == 0)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="sticker" style=" color: white;">
+        <DragNDropContainer OnStatusUpdated="HandleStatusUpdated" Blocks="Blocks" AllowCopy="true">
+            <PlaceComponent HeightPercent="5"
+                            WidthPercent="80"
+                            Id="0"
+                            DesignInfoClass="DesignClass.TopCardPicker" />
+
+
+            <TableComponent Path="./PrintLayouts/stickers.jpg"
+                            TableWidth="94"
+                            TableHeight="100"
+                            TopPosition="0"
+                            LeftPosition="3"
+                            PlaceWidth="100"
+                            PlaceHeight="25"
+                            Horizontal="@horizontal"
+                            Vertical="@vertical"
+                            Opacity="100" />
+            <canvas id='stickers_canvas_id' width="0" height="0"></canvas>
+            <div style=" background-color: transparent; display: inline-flex; justify-content: center; height: 5vh; width: 100%; align-items: center">
+                <button type="button"
+                        class="btn btn-prime"
+                        style="background-color: rgb(100, 176, 112)"
+                        @onclick="@ModalShow">
+                    Скачать макет
+                </button>
+            </div>
+
+        </DragNDropContainer>
+    </div>
+    @if (showModal)
+    {
+        <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        Заполните все ячейки
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" @onclick="@ModalCancel">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+
